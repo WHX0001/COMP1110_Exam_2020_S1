@@ -13,6 +13,10 @@ public class Q5StringHash {
      */
     public static int hash(String value, int buckets) {
         // FIXME complete this method, without using Java's built-in hashCode() method
-        return -1;
+        if(value == null){
+            return 0;
+        }
+        int first = value.charAt(0);
+        return first%buckets;
     }
 }
