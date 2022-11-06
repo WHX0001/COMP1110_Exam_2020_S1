@@ -19,6 +19,9 @@ public class Q4ArrayQueue<T> {
      * An exception that is thrown when trying to dequeue or peek at an
      * empty queue. Do not modify this class.
      */
+    private T[] elements = null;
+    int listSize = 0;
+
     public static class EmptyQueueException extends RuntimeException {
         public EmptyQueueException() { }
     }
@@ -28,7 +31,7 @@ public class Q4ArrayQueue<T> {
      */
     public boolean isEmpty() {
         // FIXME complete this method
-        return false;
+        return listSize == 0;
     }
 
     /**
@@ -38,6 +41,19 @@ public class Q4ArrayQueue<T> {
      */
     public void enqueue(T value) {
         // FIXME complete this method
+        if(elements == null){
+            listSize++;
+            elements = (T[]) new Object[1];
+            elements[0] = value;
+        }else{
+            listSize++;
+            T[] temp = elements.clone();
+            elements = (T[])new Object[listSize];
+            for(int i = 0; i < temp.length; i++){
+                elements[i] = temp[i];
+            }
+            elements[listSize-1] = value;
+        }
     }
 
     /**
@@ -48,7 +64,17 @@ public class Q4ArrayQueue<T> {
      */
     public T dequeue() throws EmptyQueueException {
         // FIXME complete this method
-        return null;
+        if(listSize == 0){
+            throw new EmptyQueueException();
+        }else{
+            listSize--;
+            T[] temp = elements.clone();
+            elements = (T[])new Object[listSize];
+            for(int i = 1; i < temp.length; i++){
+                elements[i-1] = temp[i];
+            }
+            return temp[0];
+        }
     }
 
     /**
@@ -60,7 +86,11 @@ public class Q4ArrayQueue<T> {
      */
     public T first() throws EmptyQueueException {
         // FIXME complete this method
-        return null;
+        if(listSize == 0){
+            throw new EmptyQueueException();
+        }else{
+            return elements[0];
+        }
     }
 
     /**
@@ -73,6 +103,13 @@ public class Q4ArrayQueue<T> {
      */
     public boolean contains(T value) {
         // FIXME complete this method
+        if(listSize == 0){
+            return false;
+        }
+        for(T element: elements){
+            if(element.equals(value))
+                return true;
+        }
         return false;
     }
 
@@ -88,6 +125,14 @@ public class Q4ArrayQueue<T> {
      */
     public String toString() {
         // FIXME complete this method
-        return null;
+        String res = "";
+        if(listSize != 0){
+            for(T element: elements){
+                res += element +",";
+            }
+            res = res.substring(0, res.length()-1);
+        }
+
+        return res;
     }
 }
