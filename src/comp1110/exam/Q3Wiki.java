@@ -16,9 +16,9 @@ import java.util.*;
  * and each editor may have edited zero or more articles.
  */
 public class Q3Wiki {
-    private ArrayList<Article> articles = new ArrayList<>();
+    ArrayList<Article> articles = new ArrayList<>();
 
-    class Article{
+    static class Article{
         int id;
         String name;
         String category;
@@ -250,6 +250,14 @@ public class Q3Wiki {
      */
     public int getMaxArticlesInCategory() {
         // FIXME complete this method
-        return 0;
+        Map<String, Integer> res = new HashMap<>();
+        for(Article article: articles){
+            if(res.keySet().contains(article.category)){
+                res.replace(article.category, res.get(article.category)+1);
+            }else{
+                res.put(article.category, 1);
+            }
+        }
+        return res.values().stream().max(Integer::compare).get();
     }
 }
