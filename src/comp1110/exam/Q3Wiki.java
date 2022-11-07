@@ -16,6 +16,23 @@ import java.util.*;
  * and each editor may have edited zero or more articles.
  */
 public class Q3Wiki {
+    private ArrayList<Article> articles = new ArrayList<>();
+
+    class Article{
+        int id;
+        String name;
+        String category;
+        Set<String> editors;
+        ArrayList<Article> links;
+
+        Article(int id, String name, String category, Set<String> editors){
+            this.id = id;
+            this.name = name;
+            this.category = category;
+            this.editors = editors;
+            this.links = new ArrayList<>();
+        }
+    }
     /**
      * Add a new article to this wiki. If the given article ID already exists,
      * do not modify this wiki.
@@ -29,7 +46,14 @@ public class Q3Wiki {
      */
     public boolean addArticle(int id, String name, String category, Set<String> editors) {
         // FIXME complete this method
-        return false;
+
+        for(Article article:articles){
+            if(article.id == id){
+                return false;
+            }
+        }
+        articles.add(new Article(id, name, category, editors));
+        return true;
     }
 
     /**
@@ -41,6 +65,22 @@ public class Q3Wiki {
      */
     public boolean addLink(int fromArticle, int toArticle) {
         // FIXME complete this method
+        Article from = null;
+        Article to = null;
+        for(Article article:articles){
+            if(article.id == fromArticle){
+                from = article;
+            }
+            if(article.id == toArticle){
+                to = article;
+            }
+        }
+        if(from != null && to != null){
+            if(!from.links.contains(to)){
+                from.links.add(to);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -55,6 +95,17 @@ public class Q3Wiki {
      */
     public boolean deleteArticle(int id) {
         // FIXME complete this method
+        for(Article article: articles){
+            if(article.id == id){
+                articles.remove(article);
+                for(Article incomingLinkArticle: articles){
+                    if(incomingLinkArticle.links.contains(article)){
+                        incomingLinkArticle.links.remove(article);
+                    }
+                }
+                return true;
+            }
+        }
         return false;
     }
 
@@ -63,7 +114,7 @@ public class Q3Wiki {
      */
     public int getArticleCount() {
         // FIXME complete this method
-        return 0;
+        return articles.size();
     }
 
     /**
@@ -75,7 +126,13 @@ public class Q3Wiki {
      */
     public Set<Integer> getArticlesEditedBy(String editor) {
         // FIXME complete this method
-        return null;
+        Set<Integer> res = new HashSet<>();
+        for(Article article:articles){
+            if(article.editors.contains(editor)){
+                res.add(article.id);
+            }
+        }
+        return res;
     }
 
     /**
@@ -87,7 +144,13 @@ public class Q3Wiki {
      */
     public Set<Integer> getArticlesForCategory(String category) {
         // FIXME complete this method
-        return null;
+        Set<Integer> res = new HashSet<>();
+        for(Article article:articles){
+            if(article.category.equals(category)){
+                res.add(article.id);
+            }
+        }
+        return res;
     }
 
     /**
@@ -103,7 +166,20 @@ public class Q3Wiki {
      */
     public int getMaxIncomingLinks() {
         // FIXME complete this method
-        return 0;
+        int max = 0;
+        for(Article target: articles){
+            int count = 0;
+            for(Article article: articles){
+
+                if(article.links.contains(target)){
+                    System.out.println("sfgdagdafg");
+                    count++;
+                }
+
+            }
+            max = Integer.max(max, count);
+        }
+        return max;
     }
 
     /**
@@ -121,7 +197,15 @@ public class Q3Wiki {
      */
     public int getNumCrossCategoryLinks() {
         // FIXME complete this method
-        return 0;
+        int count = 0;
+        for(Article from: articles){
+            for(Article to: from.links){
+                if(!from.category.equals(to.category)){
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     /**
@@ -138,7 +222,19 @@ public class Q3Wiki {
      */
     public int getNumCategoriesEdited(String editor) {
         // FIXME complete this method
-        return 0;
+        Set<Article> workList = new HashSet<>();
+        for(Article article:articles){
+            if(article.editors.contains(editor)){
+                workList.add(article);
+            }
+        }
+        Set<String> categories = new HashSet<>();
+        for(Article article: workList){
+            if(!categories.contains(article.category)){
+                categories.add(article.category);
+            }
+        }
+        return categories.size();
     }
 
     /**
